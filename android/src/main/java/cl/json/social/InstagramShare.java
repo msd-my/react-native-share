@@ -12,7 +12,7 @@ import com.facebook.react.bridge.ReadableMap;
 /**
  * Created by Ralf Nieuwenhuizen on 10-04-17.
  */
-public class InstagramShare extends SingleShareIntent {
+public class InstagramShare extends ShareIntent {
 
     private static final String PACKAGE = "com.instagram.android";
     private static final String PLAY_STORE_LINK = "market://details?id=com.instagram.android";
