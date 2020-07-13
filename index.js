@@ -218,6 +218,7 @@ class RNShare {
     PINTEREST: NativeModules.RNShare.PINTEREST || 'pinterest',
     LINKEDIN: NativeModules.RNShare.LINKEDIN || 'linkedin',
     SMS: NativeModules.RNShare.SMS || 'sms',
+    INSTAGRAM_SINGLE: NativeModules.RNShare.INSTAGRAM_SINGLE || 'instagramsingle'
   };
 
   static InstagramStories = {

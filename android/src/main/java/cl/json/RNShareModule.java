@@ -32,6 +32,7 @@ import cl.json.social.SnapChatShare;
 import cl.json.social.SMSShare;
 import cl.json.social.MessengerShare;
 import cl.json.social.LinkedinShare;
+import cl.json.social.InstagramSingle;
 
 public class RNShareModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
@@ -69,6 +70,7 @@ public class RNShareModule extends ReactContextBaseJavaModule implements Activit
         messenger,
         snapchat,
         sms,
+        instagramsingle,
         linkedin;
 
 
@@ -103,6 +105,8 @@ public class RNShareModule extends ReactContextBaseJavaModule implements Activit
                     return new MessengerShare(reactContext);
                 case linkedin:
                     return new LinkedinShare(reactContext);
+                case instagramsingle:
+                    return new InstagramSingle(reactContext);
                 default:
                     return null;
             }
