@@ -17,7 +17,7 @@ public class InstagramSingle extends SingleShareIntent {
     private static final String PACKAGE = "com.instagram.android";
     private static final String PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=com.instagram.android";
 
-    public InstagramShare(ReactApplicationContext reactContext) {
+    public InstagramSingle(ReactApplicationContext reactContext) {
         super(reactContext);
     }
 
