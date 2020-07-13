@@ -90,6 +90,7 @@ type Options = {
   message?: string,
   title?: string,
   subject?: string,
+  recipient?: string,
   excludedActivityTypes?: string,
   failOnCancel?: boolean,
   showAppsToView?: boolean,
@@ -211,15 +212,17 @@ class RNShare {
     TWITTER: NativeModules.RNShare.TWITTER || 'twitter',
     WHATSAPP: NativeModules.RNShare.WHATSAPP || 'whatsapp',
     INSTAGRAM: NativeModules.RNShare.INSTAGRAM || 'instagram',
-    INSTAGRAM_STORIES: NativeModules.RNShare.INSTAGRAM_STORIES || 'instagram-stories',
+    INSTAGRAM_STORIES: NativeModules.RNShare.INSTAGRAM_STORIES || 'instagramstories',
     GOOGLEPLUS: NativeModules.RNShare.GOOGLEPLUS || 'googleplus',
     EMAIL: NativeModules.RNShare.EMAIL || 'email',
     PINTEREST: NativeModules.RNShare.PINTEREST || 'pinterest',
     LINKEDIN: NativeModules.RNShare.LINKEDIN || 'linkedin',
+    SMS: NativeModules.RNShare.SMS || 'sms',
   };
 
   static InstagramStories = {
     SHARE_BACKGROUND_IMAGE: NativeModules.RNShare.SHARE_BACKGROUND_IMAGE || 'shareBackgroundImage',
+    SHARE_BACKGROUND_VIDEO: NativeModules.RNShare.SHARE_BACKGROUND_VIDEO || 'shareBackgroundVideo',
     SHARE_STICKER_IMAGE: NativeModules.RNShare.SHARE_STICKER_IMAGE || 'shareStickerImage',
     SHARE_BACKGROUND_AND_STICKER_IMAGE:
       NativeModules.RNShare.SHARE_BACKGROUND_AND_STICKER_IMAGE || 'shareBackgroundAndStickerImage',
