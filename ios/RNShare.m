@@ -88,21 +88,21 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)constantsToExport
 {
-  return @{
-    @"FACEBOOK": @"facebook",
-    @"FACEBOOK_STORIES": @"facebook-stories",
-    @"TWITTER": @"twitter",
-    @"GOOGLEPLUS": @"googleplus",
-    @"WHATSAPP": @"whatsapp",
-    @"INSTAGRAM": @"instagram",
-    @"INSTAGRAM_STORIES": @"instagramstories",
-    @"EMAIL": @"email",
-
-    @"SHARE_BACKGROUND_IMAGE": @"shareBackgroundImage",
-    @"SHARE_BACKGROUND_VIDEO": @"shareBackgroundVideo",
-    @"SHARE_STICKER_IMAGE": @"shareStickerImage",
-    @"SHARE_BACKGROUND_AND_STICKER_IMAGE": @"shareBackgroundAndStickerImage",
-  };
+    return @{
+        @"FACEBOOK": @"facebook",
+        @"FACEBOOK_STORIES": @"facebook-stories",
+        @"TWITTER": @"twitter",
+        @"GOOGLEPLUS": @"googleplus",
+        @"WHATSAPP": @"whatsapp",
+        @"INSTAGRAM": @"instagram",
+        @"INSTAGRAM_STORIES": @"instagramstories",
+        @"EMAIL": @"email",
+        
+        @"SHARE_BACKGROUND_IMAGE": @"shareBackgroundImage",
+        @"SHARE_BACKGROUND_VIDEO": @"shareBackgroundVideo",
+        @"SHARE_STICKER_IMAGE": @"shareStickerImage",
+        @"SHARE_BACKGROUND_AND_STICKER_IMAGE": @"shareBackgroundAndStickerImage",
+    };
 }
 
 RCT_EXPORT_METHOD(shareSingle:(NSDictionary *)options
@@ -169,14 +169,86 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
         RCTLogError(@"Unable to show action sheet from app extension");
         return;
     }
-
+    
     NSMutableArray<id> *items = [NSMutableArray array];
     NSString *message = [RCTConvert NSString:options[@"message"]];
+    [options setValue:message forKey:@"subject"];
     if (message) {
-        [items addObject:message];
+        // following code to get iamge from text dynamically
+        //[items addObject:message];
+        /* NSString *string = message;
+         UIGraphicsBeginImageContext(CGSizeMake(1000, 100));
+         //UIGraphicsGetCurrentContext().draw
+         UILabel * lbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 1000, 100)];
+         [lbl setNumberOfLines: 0];
+         [lbl setText:message];
+         [lbl setFont:[UIFont systemFontOfSize:20]];
+         [lbl setBackgroundColor:UIColor.clearColor];
+         [lbl setTextColor:[UIColor whiteColor]];
+         //[lbl drawTextInRect:lbl.frame];
+         // [string drawAtPoint:CGPointMake(10, 20)
+         // withFont:[UIFont systemFontOfSize:20]];
+         [lbl drawRect:lbl.frame];
+         UIImage *result =  UIGraphicsGetImageFromCurrentImageContext();//[self imageFromView:lbl];//
+         // UIGraphicsEndImageContext();
+         NSArray *paths = NSSearchPathForDirectoriesInDomains
+         (NSDocumentDirectory, NSUserDomainMask, YES);
+         NSString *documentsDirectory = [paths objectAtIndex:0];
+         
+         //make a file name to write the data to using the documents directory:
+         NSString *fileName = [NSString stringWithFormat:@"%@/textfile.png",
+         documentsDirectory];
+         //create content - four lines of text
+         NSString *content = message;
+         //save content to the documents directory
+         NSData * d =  UIImagePNGRepresentation(result);
+         [d writeToFile:fileName
+         atomically:NO
+         ];*/
+        
+        // for now with good quality, image saved locally
+        // if confirmed can make sure of getting an image from text dynamically with good quality
+        
+        UIFont* font = [UIFont systemFontOfSize:22.0f];
+        NSDictionary *attributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:22]};
+        CGSize size = [message sizeWithAttributes:attributes];
+        // Create a bitmap context into which the text will be rendered.
+        UIGraphicsBeginImageContext(size);
+        // Render the text
+        [message drawAtPoint:CGPointMake(0.0, 0.0) withAttributes:attributes];
+        // Retrieve the image
+        UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
+        // Convert to JPEG
+        NSData* data = UIImageJPEGRepresentation(image, 1.0);
+        // Figure out a safe path
+        NSArray *arrayPaths = NSSearchPathForDirectoriesInDomains(
+                                                                  NSDocumentDirectory,
+                                                                  NSUserDomainMask,
+                                                                  YES);
+        NSString *docDir = [arrayPaths objectAtIndex:0];
+        // Write the file
+        NSString *filePath = [docDir stringByAppendingPathComponent:@"Kevin.jpg"];
+        BOOL success = [data writeToFile:filePath atomically:YES];
+        if(!success)
+        {
+            NSLog(@"Failed to write to file. Perhaps it already exists?");
+        }
+        else
+        {
+            NSLog(@"JPEG file successfully written to %@", filePath);
+        }
+        // Clean up
+        UIGraphicsEndImageContext();
+        [items addObject:[NSURL fileURLWithPath:filePath]];
+        
+        // for static image
+        // [items addObject:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"share_text_img" ofType:@"png"]]];
+        
     }
+    
     BOOL saveToFiles = [RCTConvert BOOL:options[@"saveToFiles"]];
     NSArray *urlsArray = options[@"urls"];
+    
     for (int i=0; i<urlsArray.count; i++) {
         NSURL *URL = [RCTConvert NSURL:urlsArray[i]];
         if (URL) {
@@ -189,20 +261,32 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
                     failureCallback(error);
                     return;
                 }
-                if (saveToFiles) {
-                    NSURL *filePath = [self getPathFromBase64:URL.absoluteString with:data];
-                    if (filePath) {
-                        [items addObject: filePath];
+                if //(saveToFiles){
+                    (1 == 1) { //here there are either data share cse or url share case
+                        // i need to work on url case share
+                        
+                        NSURL *filePath = [self getPathFromBase64:URL.absoluteString with:data];
+                        if (filePath) {
+                            [items addObject: filePath];
+                        }
+                    } else {
+                        [items addObject:data];
                     }
-                } else {
-                    [items addObject:data];
-                }
             } else {
+                /*NSError *error;
+                 NSData *data = [NSData dataWithContentsOfURL:URL
+                 options:(NSDataReadingOptions)0
+                 error:&error];
+                 if (!data) {
+                 failureCallback(error);
+                 return;
+                 }
+                 [items addObject:data];*/
                 [items addObject:URL];
             }
         }
     }
-
+    
     NSArray *activityItemSources = options[@"activityItemSources"];
     if (activityItemSources) {
         [activityItemSources enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -210,19 +294,19 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
             [items addObject:activityItemSource];
         }];
     }
-
+    
     if (items.count == 0) {
         RCTLogError(@"No `url` or `message` to share");
         return;
     }
-
+    
     UIViewController *controller = RCTPresentedViewController();
-
+    
     if (saveToFiles) {
         NSArray *urls = [items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
             return [evaluatedObject isKindOfClass:[NSURL class]];
         }]];
-
+        
         if (urls.count == 0) {
             RCTLogError(@"No `urls` to save in Files");
             return;
@@ -236,19 +320,19 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
             return;
         }
     }
-
+    
     UIActivityViewController *shareController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
-
+    
     NSString *subject = [RCTConvert NSString:options[@"subject"]];
     if (subject) {
         [shareController setValue:subject forKey:@"subject"];
     }
-
+    
     NSArray *excludedActivityTypes = [RCTConvert NSStringArray:options[@"excludedActivityTypes"]];
     if (excludedActivityTypes) {
         shareController.excludedActivityTypes = excludedActivityTypes;
     }
-
+    
     shareController.completionWithItemsHandler = ^(NSString *activityType, BOOL completed, __unused NSArray *returnedItems, NSError *activityError) {
         if (activityError) {
             [controller  dismissViewControllerAnimated:true completion:nil];
@@ -257,7 +341,7 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
             successCallback(@[@(completed), RCTNullIfNil(activityType)]);
         }
     };
-
+    
     shareController.modalPresentationStyle = UIModalPresentationPopover;
     NSNumber *anchorViewTag = [RCTConvert NSNumber:options[@"anchor"]];
     if (!anchorViewTag) {
@@ -265,9 +349,9 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
     }
     shareController.popoverPresentationController.sourceView = controller.view;
     shareController.popoverPresentationController.sourceRect = [self sourceRectInView:controller.view anchorViewTag:anchorViewTag];
-
+    
     [controller presentViewController:shareController animated:YES completion:nil];
-
+    
     shareController.view.tintColor = [RCTConvert UIColor:options[@"tintColor"]];
 }
 
@@ -275,7 +359,7 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
     NSRange   searchedRange = NSMakeRange(0, [base64String length]);
     NSString *pattern = @"/[a-zA-Z0-9]+;";
     NSError  *error = nil;
-
+    
     NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern: pattern options:0 error:&error];
     NSArray* matches = [regex matchesInString:base64String options:0 range: searchedRange];
     NSString * mimeType = @"png";
@@ -283,7 +367,7 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
         NSString* matchText = [base64String substringWithRange:[match range]];
         mimeType = [matchText substringWithRange:(NSMakeRange(1, matchText.length - 2))];
     }
-
+    
     NSString *pathComponent = [NSString stringWithFormat:@"file.%@", mimeType];
     NSString *writePath = [NSTemporaryDirectory() stringByAppendingPathComponent:pathComponent];
     if ([data writeToFile:writePath atomically:YES]) {
@@ -292,7 +376,7 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
     return NULL;
 }
 
-- (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
+-(void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
     if (rejectBlock) {
         NSError *error = [NSError errorWithDomain:@"CANCELLED" code: 500 userInfo:@{NSLocalizedDescriptionKey:@"PICKER_WAS_CANCELLED"}];
         rejectBlock(error);
@@ -304,5 +388,29 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
         resolveBlock(@[@(YES), @"com.apple.DocumentsApp"]);
     }
 }
-
+- (UIImage *)imageFromView:(UIView *)view
+{
+    size_t width = view.bounds.size.width*2;
+    size_t height = view.bounds.size.height*2;
+    
+    unsigned char *imageBuffer = (unsigned char *)malloc(width*height*8);
+    CGColorSpaceRef colourSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef imageContext = CGBitmapContextCreate(imageBuffer, width, height, 8, width*4, colourSpace,kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big);
+    
+    CGColorSpaceRelease(colourSpace);
+    
+    CGContextTranslateCTM(imageContext, 0.0, height);
+    CGContextScaleCTM(imageContext, 2.0, -2.0);
+    
+    [view.layer renderInContext:imageContext];
+    
+    CGImageRef outputImage = CGBitmapContextCreateImage(imageContext);
+    UIImage *image = [[UIImage alloc] initWithCGImage:outputImage];
+    
+    CGImageRelease(outputImage);
+    CGContextRelease(imageContext);
+    free(imageBuffer);
+    
+    return image;
+}
 @end
