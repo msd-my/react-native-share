@@ -175,40 +175,12 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
     [options setValue:message forKey:@"subject"];
     if (message) {
         // following code to get iamge from text dynamically
-        //[items addObject:message];
-        /* NSString *string = message;
-         UIGraphicsBeginImageContext(CGSizeMake(1000, 100));
-         //UIGraphicsGetCurrentContext().draw
-         UILabel * lbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 1000, 100)];
-         [lbl setNumberOfLines: 0];
-         [lbl setText:message];
-         [lbl setFont:[UIFont systemFontOfSize:20]];
-         [lbl setBackgroundColor:UIColor.clearColor];
-         [lbl setTextColor:[UIColor whiteColor]];
-         //[lbl drawTextInRect:lbl.frame];
-         // [string drawAtPoint:CGPointMake(10, 20)
-         // withFont:[UIFont systemFontOfSize:20]];
-         [lbl drawRect:lbl.frame];
-         UIImage *result =  UIGraphicsGetImageFromCurrentImageContext();//[self imageFromView:lbl];//
-         // UIGraphicsEndImageContext();
-         NSArray *paths = NSSearchPathForDirectoriesInDomains
-         (NSDocumentDirectory, NSUserDomainMask, YES);
-         NSString *documentsDirectory = [paths objectAtIndex:0];
-         
-         //make a file name to write the data to using the documents directory:
-         NSString *fileName = [NSString stringWithFormat:@"%@/textfile.png",
-         documentsDirectory];
-         //create content - four lines of text
-         NSString *content = message;
-         //save content to the documents directory
-         NSData * d =  UIImagePNGRepresentation(result);
-         [d writeToFile:fileName
-         atomically:NO
-         ];*/
+        [items addObject:message];
+       
         
         // for now with good quality, image saved locally
         // if confirmed can make sure of getting an image from text dynamically with good quality
-        
+       /*
         UIFont* font = [UIFont systemFontOfSize:22.0f];
         NSDictionary *attributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:22]};
         CGSize size = [message sizeWithAttributes:attributes];
@@ -222,9 +194,9 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
         NSData* data = UIImageJPEGRepresentation(image, 1.0);
         // Figure out a safe path
         NSArray *arrayPaths = NSSearchPathForDirectoriesInDomains(
-                                                                  NSDocumentDirectory,
-                                                                  NSUserDomainMask,
-                                                                  YES);
+                                            NSDocumentDirectory,
+                                            NSUserDomainMask,
+                                            YES);
         NSString *docDir = [arrayPaths objectAtIndex:0];
         // Write the file
         NSString *filePath = [docDir stringByAppendingPathComponent:@"Kevin.jpg"];
@@ -239,15 +211,16 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options
         }
         // Clean up
         UIGraphicsEndImageContext();
-        [items addObject:[NSURL fileURLWithPath:filePath]];
+         [items addObject:[NSURL fileURLWithPath:filePath]];
         
-        // for static image
-        // [items addObject:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"share_text_img" ofType:@"png"]]];
-        
+       // for static image
+       // [items addObject:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"share_text_img" ofType:@"png"]]];
+        */
     }
     
     BOOL saveToFiles = [RCTConvert BOOL:options[@"saveToFiles"]];
     NSArray *urlsArray = options[@"urls"];
+    
     
     for (int i=0; i<urlsArray.count; i++) {
         NSURL *URL = [RCTConvert NSURL:urlsArray[i]];
