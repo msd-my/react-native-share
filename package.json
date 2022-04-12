@@ -48,7 +48,7 @@
     "react": "16.11.0",
     "react-native": "0.62.2",
     "semantic-release": "^17.0.4",
-    "simple-git": "2.6.0"
+    "simple-git": "3.5.0"
   },
   "keywords": [
     "react-native",
