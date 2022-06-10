@@ -47,7 +47,7 @@
     "prettier": "^2.0.5",
     "react": "16.11.0",
     "react-native": "0.62.2",
-    "semantic-release": "^17.0.4",
+    "semantic-release": "^19.0.3",
     "simple-git": "2.6.0"
   },
   "keywords": [
